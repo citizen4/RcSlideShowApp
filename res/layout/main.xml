@@ -141,7 +141,7 @@
         </LinearLayout>
 
 
-            <SeekBar android:id="@+id/interval_seek"
+        <SeekBar android:id="@+id/interval_seek"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:layout_alignParentBottom="true"
