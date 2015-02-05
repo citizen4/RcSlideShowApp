@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+   <stroke android:width="2dp" android:color="@color/dark_border" />
+   <solid android:color="@color/dark_bg" />
+   <padding android:left="0dp" android:top="8dp" android:right="0dp" android:bottom="4dp" />
+   <corners android:radius="12dp" />
+</shape>
+-->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                    android:startColor="#88222222"
+                    android:centerColor="#FFBBBBBB"
+                    android:endColor="#88222222"
+                    android:centerX="0.5"
+                    android:centerY="0.5"
+                    android:type="linear"
+                    android:angle="90"
+                    />
+
+            <padding android:left="0dp"
+                     android:top="0dp"
+                     android:right="0dp"
+                     android:bottom="0dp"/>
+
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+
+            <gradient
+                    android:startColor="#88444444"
+                    android:centerColor="#FFAAAAAA"
+                    android:centerY="0.5"
+                    android:centerX="0.5"
+                    android:endColor="#88444444"
+                    android:angle="0"
+                    />
+
+            <padding android:left="4dp"
+                     android:top="4dp"
+                     android:right="4dp"
+                     android:bottom="4dp"/>
+
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+
+
+    <item>
+        <shape android:shape="rectangle">
+            <stroke android:color="#ff222222" android:width="2dp"/>
+            <gradient
+                    android:startColor="#FF2A0000"
+                    android:endColor="#FF100000"
+                    android:angle="90"
+                    />
+            <padding android:left="0dp"
+                     android:top="0dp"
+                     android:right="0dp"
+                     android:bottom="2dp"/>
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+
+</layer-list>
