@@ -28,7 +28,8 @@ public class BtRcManager
    public static final int MESSAGE_RECEIVED = 2;
    public static final int STRING_RECEIVED = 3;
 
-   private static final String NEXUS_DEVICE_MAC = "D8:50:E6:79:7C:3B";
+   //private static final String NEXUS_DEVICE_MAC = "D8:50:E6:79:7C:3B";
+   private static final String RADXA_DEVICE_MAC = "54:E4:BD:0D:BC:74";
    private static final String LOG_TAG = "BtRcManager";
    private static final String UUID_STRING = "069c9397-7da9-4810-849c-f52f6b1deaf";
    private BluetoothAdapter mBluetoothAdapter;
@@ -174,7 +175,7 @@ public class BtRcManager
 
       if (pairedDevices.size() > 0) {
          for (BluetoothDevice device : pairedDevices) {
-            if (device.getAddress().equals(NEXUS_DEVICE_MAC)) {
+            if (device.getAddress().equals(RADXA_DEVICE_MAC)) {
                remoteDevice = device;
                break;
             }

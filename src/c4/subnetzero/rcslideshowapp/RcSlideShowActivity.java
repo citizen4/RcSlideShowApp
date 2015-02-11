@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -35,9 +36,11 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
    private Switch mLoopSwitch;
    private SeekBar mIntervalSeek;
    private ProgressBar mImageProgressBar;
-   private ToggleButton mStartStopBtn;
+   private Button mStartStopBtn;
    private ToggleButton mPauseResumeBtn;
    private ToggleButton mShowTestBtn;
+   private Button mPreviousImageBtn;
+   private Button mNextImageBtn;
    private int mIntervalSec = 3;
    private long mLastActionTimeStamp;
    //private boolean mIsBtEnabled;
@@ -102,7 +105,7 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
    {
       if (requestCode == BtRcManager.REQUEST_ENABLE_BT && resultCode == RESULT_OK) {
          mBtRcManager.setState(BtRcManager.State.DISCONNECTED);
-      }else {
+      } else {
          mBtRcManager.setState(BtRcManager.State.DISABLED);
       }
    }
@@ -163,7 +166,7 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
          mActionBar.setDisplayShowCustomEnabled(true);
 
          mActionBar.setCustomView(actionbarView);
-      }else {
+      } else {
 
          mRcStateBtn = (ImageButton) findViewById(R.id.rc_state_btn);
          mRcStateLabel = (TextView) findViewById(R.id.rc_state_label);
@@ -188,11 +191,17 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
       mLoopSwitch = (Switch) findViewById(R.id.loop_switch);
       mLoopSwitch.setOnClickListener(mOnClickListener);
 
-      mStartStopBtn = (ToggleButton) findViewById(R.id.start_stop_tgl);
+      mStartStopBtn = (Button) findViewById(R.id.start_stop_tgl);
       mStartStopBtn.setOnClickListener(mOnClickListener);
 
       mPauseResumeBtn = (ToggleButton) findViewById(R.id.pause_resume_tgl);
       mPauseResumeBtn.setOnClickListener(mOnClickListener);
+
+      mPreviousImageBtn = (Button) findViewById(R.id.previous_image_btn);
+      mPreviousImageBtn.setOnClickListener(mOnClickListener);
+
+      mNextImageBtn = (Button) findViewById(R.id.next_image_btn);
+      mNextImageBtn.setOnClickListener(mOnClickListener);
 
       mShowTestBtn = (ToggleButton) findViewById(R.id.show_test_tgl);
       mShowTestBtn.setOnClickListener(mOnClickListener);
@@ -244,7 +253,7 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
       int stateColor;
       Drawable stateDrawable;
 
-      switch (newState){
+      switch (newState) {
          case DISABLED:
             stateColor = Color.RED;
             guiAlpha = 0.1f;
@@ -284,7 +293,6 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
          switch (uiState[i++]) {
             case RcMessage.START_BTN:
                mStartStopBtn.setEnabled(uiState[i++] == RcMessage.ON);
-               mStartStopBtn.setChecked(uiState[i++] == RcMessage.ON);
                break;
             case RcMessage.PAUSE_BTN:
                mPauseResumeBtn.setEnabled(uiState[i++] == RcMessage.ON);
@@ -293,6 +301,12 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
             case RcMessage.TEST_BTN:
                mShowTestBtn.setEnabled(uiState[i++] == RcMessage.ON);
                mShowTestBtn.setChecked(uiState[i++] == RcMessage.ON);
+               break;
+            case RcMessage.PREVIOUS_IMAGE_BTN:
+               mPreviousImageBtn.setEnabled(uiState[i++] == RcMessage.ON);
+               break;
+            case RcMessage.NEXT_IMAGE_BTN:
+               mNextImageBtn.setEnabled(uiState[i++] == RcMessage.ON);
                break;
             case RcMessage.LOOP_SWITCH:
                mLoopSwitch.setChecked(uiState[i++] == RcMessage.ON);
@@ -319,43 +333,48 @@ public class RcSlideShowActivity extends Activity implements Handler.Callback
    private View.OnClickListener mOnClickListener = new View.OnClickListener()
    {
       @Override
-      public void onClick(View v)
+      public void onClick(View view)
       {
-         if (v instanceof CompoundButton) {
-            CompoundButton btn = (CompoundButton) v;
-            //keep visual state
-            btn.toggle();
-            //Prevent too much action
-            if (System.currentTimeMillis() - mLastActionTimeStamp < 600) {
-               return;
-            }
-
-            RcMessage commandMsg = new RcMessage();
-            commandMsg.TYPE = RcMessage.COMMAND;
-
-            switch (btn.getId()) {
-               case R.id.start_stop_tgl:
-                  commandMsg.ELEMENT = RcMessage.START_BTN;
-                  break;
-               case R.id.pause_resume_tgl:
-                  commandMsg.ELEMENT = RcMessage.PAUSE_BTN;
-                  break;
-               case R.id.show_test_tgl:
-                  commandMsg.ELEMENT = RcMessage.TEST_BTN;
-                  break;
-               case R.id.loop_switch:
-                  commandMsg.ELEMENT = RcMessage.LOOP_SWITCH;
-                  break;
-               default:
-                  return;
-            }
-
-            if (mBtRcManager.getState() == BtRcManager.State.CONNECTED) {
-               mBtRcManager.sendMessage(commandMsg);
-            }
-
-            mLastActionTimeStamp = System.currentTimeMillis();
+         if (view instanceof CompoundButton) {
+            ((CompoundButton) view).toggle();
          }
+
+         //Prevent too much action
+         if (System.currentTimeMillis() - mLastActionTimeStamp < 900) {
+            return;
+         }
+
+         RcMessage commandMsg = new RcMessage();
+         commandMsg.TYPE = RcMessage.COMMAND;
+
+         switch (view.getId()) {
+            case R.id.start_stop_tgl:
+               commandMsg.ELEMENT = RcMessage.START_BTN;
+               break;
+            case R.id.pause_resume_tgl:
+               commandMsg.ELEMENT = RcMessage.PAUSE_BTN;
+               break;
+            case R.id.previous_image_btn:
+               commandMsg.ELEMENT = RcMessage.PREVIOUS_IMAGE_BTN;
+               break;
+            case R.id.next_image_btn:
+               commandMsg.ELEMENT = RcMessage.NEXT_IMAGE_BTN;
+               break;
+            case R.id.show_test_tgl:
+               commandMsg.ELEMENT = RcMessage.TEST_BTN;
+               break;
+            case R.id.loop_switch:
+               commandMsg.ELEMENT = RcMessage.LOOP_SWITCH;
+               break;
+            default:
+               return;
+         }
+
+         if (mBtRcManager.getState() == BtRcManager.State.CONNECTED) {
+            mBtRcManager.sendMessage(commandMsg);
+         }
+
+         mLastActionTimeStamp = System.currentTimeMillis();
       }
    };
 

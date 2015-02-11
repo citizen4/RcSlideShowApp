@@ -15,12 +15,12 @@ public class RcMessage
    public static final int INTERVAL_SEEK = 105;
    public static final int IMAGE_PROGRESS = 106;
    public static final int IMAGE_NUMBER = 107;
+   public static final int PREVIOUS_IMAGE_BTN = 108;
+   public static final int NEXT_IMAGE_BTN = 109;
 
    //UI States
    public static final int OFF = 0;
    public static final int ON = 1;
-   //public static final int ENABLED = 2;
-   //public static final int DISABLED = 3;
 
    //Message
    public int TYPE = COMMAND;
